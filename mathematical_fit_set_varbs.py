@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue May  9 11:31:16 2023
+visualize function and compute chi-square for a single set of variables
 
 @author: emili
 """
@@ -34,7 +34,7 @@ startTime = datetime.now()
 
 
 # import all measured track lengths in halite 
-Height_File_Name = 'profile csv/detected pits - halite loc 2 150x 2.csv'
+Height_File_Name = 'profile csv/halite - all detected pits.csv'
 
 # open track length csv and convert to df
 length_csv = read_csv(Height_File_Name)
@@ -454,17 +454,6 @@ def theoretical_func(xdata, mineral, A, B, sigma, x0, c, d, beta):
     
     return total_func
 
-# define variables for integration
-## these will be a RANGE!!
-
-# need to create 5 for loops (one per variable)
-# also need to store the data - and make sure there is not a memory error
-# once data is stored THEN create the separate surface plots and such
-# put titles on each plot
-# for loop before integral - and everything should be included in the loop
-# ten values per varb to start
-# but need to know approx where to start the ranges.. mess around with varbs first to see
-
 # establish dataframe that will store all data
 #chi_test_vals = pd.DataFrame(columns = ['Chi-Squared Test Statistic (overall)', 'A', 'B', 'x_0', 'sigma', 'c', 'd'])
 
@@ -492,22 +481,11 @@ beta = 0.018 #0.02325581 = 1/43
 # =============================================================================
 
 
-
-
-
-
-
-G = 1
-
 #plt.figure()
 #plt.plot(x_bins, B * np.exp((-1/2) * ((x_bins - x0) / sigma)**2))
 
 #plt.figure()
 #plt.plot(x, 1 / (1 + np.exp(-1 * c * x + (d))))
-
-
-
-
 
 
 ## visualize efficiency function
