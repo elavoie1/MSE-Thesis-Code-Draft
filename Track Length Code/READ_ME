@@ -3,3 +3,6 @@ but you can replicate/improve them in future studies.
 "plots" folder is where plot outputs get saves to
 "paleo.py" is from source code - I did not create or change this but you need this file to run the code. It's a library that is needed to either import or pull from
 Make sure to have all proper libraries installed!
+
+"Mathematical Fit Qualitative Test.ipynb" is a qualitative fit test for the efficiency function * (thorium + neutron) mathematical model we developed. Used mainly to visualize shape
+and how parameters manipulate it.
