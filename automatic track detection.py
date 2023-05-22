@@ -28,9 +28,15 @@ startTime = datetime.now()
 File_Name = [file_name.png] #in string format # no scale bars, text, borders # meant for laser images only
 Height_File_Name = [file name.csv] # in string format
 
-# change per image! magnification image was captured at
+# change per image! magnification image was captured at. usually 50 or 150
 magnification = 50
 
+## This needs to be double checked depending on the Keyence parameters
+# resolution depending on user-given magnification
+#resolution_150x = 0.4741  # high res. 150x image
+resolution_150x = 0.0474 #microns per pixel for 150x image 2048x1536
+resolution_50x = 0.1399 # for 2048x1536 pixel image
+#resolution_50x = 0.2797 #microns per pixel for 50x image
 
 # open image
 img = cv2.imread("images/" + File_Name,1);
@@ -40,20 +46,13 @@ height_csv = read_csv(Height_File_Name,
                       skiprows = 15, header=None)
 
 
-
-# resolution depending on user-given magnification
-#resolution_150x = 0.4741  # high res. 150x image (1.10.23 only)
-resolution_150x = 0.0474 #microns per pixel for 150x image 2048x1536
-resolution_50x = 0.1399 # for 2048x1536 pixel image
-#resolution_50x = 0.2797 #microns per pixel for 50x image
-
 # read image in pixel format to get pixel size of image
 img_for_size = Image.open("images/" + File_Name)
 
 # parameters for image size in pixels
 width, height = img_for_size.size
 
-# amount of pixels you want cut off equally around image (reduce noise)
+# amount of pixels you want cut off equally around image (possibly reduce noise  esp on stitched images)
 pixels_crop = 0
 
 # Setting the points for cropped image
@@ -77,7 +76,6 @@ new_width = crop_img.shape[1]
 # 
 # =============================================================================
 
-
 # crop height .csv (accounting for one less row at end)
 # convert to pd df
 height_df = pd.DataFrame(data=height_csv)
@@ -91,13 +89,12 @@ height_df = pd.DataFrame(data=height_csv)
 # height_df = height_df.drop(labels=[1017,1018,1019,1020,1021], axis=1)
 # =============================================================================
 
-
 # convert image to greyscale
 grey = cv2.cvtColor(crop_img,cv2.COLOR_BGR2GRAY)
 
 # take the gaussian blur image
 gauss = cv2.GaussianBlur(grey,(13,13),100) # gaussian smoothing
-## (5,5) gaussian kernel size - should be odd
+## (5,5) standard gaussian kernel size - should be odd
 ## 100 is standard deviation
 
 
@@ -107,6 +104,8 @@ gauss_display = cv2.resize(gauss_display, (1024, 768))
 cv2.imshow('gaussian blur', gauss_display)
 cv2.waitKey(0)
 
+## next few lines are for binary image creation if needed
+#-----------
 # use these parameters to create a binary image, if needed
 threshold_val = 170 #manipulate this for "sensitivity"
 # like the sensitivity of contrast you want to consider. 
@@ -128,6 +127,9 @@ ret,thresh = cv2.threshold(gauss,threshold_val,255,0)
 # # save this image
 # cv2.imwrite('test data hole detection/blob map ' + File_Name, thresh)
 # =============================================================================
+# ---------------
+
+
 
 ########################### Blob Detection ############################
 
@@ -159,6 +161,8 @@ https://learnopencv.com/blob-detection-using-opencv-python-c/
 
 You can filter blobs by color, circularity, convexity, and intertia ratio
 (how elongated a shape is).
+
+These filters will likely need to change PER IMAGE! Future work would include automating/improving this!
 """
 
 # Setup SimpleBlobDetector parameters.
@@ -231,9 +235,9 @@ n = gauss.shape[1]
 X1, X2 = np.mgrid[:m, :n]
 
 ## ----------------------------------------------------------------------------
-# =============================================================================
-# # comment this section out if you want to take away lin reg
-# 
+# # comment this section out if you want to take away linear regression and plane subtraction
+
+# ============================================================================= 
 # # convert dataframe to numpy array
 # height_data = height_df.to_numpy()
 # 
@@ -273,15 +277,6 @@ X1, X2 = np.mgrid[:m, :n]
 # ax.set_title('after plane subtraction');
 # ax.view_init(5, 180) # angle to view 3D plot
 # plt.show()
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
 # 
 # # switch back to height dataframe but used normalized dats
 # height_df = pd.DataFrame(data = Y_sub)
