@@ -3,6 +3,8 @@
 Created on Tue Feb  7 08:24:14 2023
 
 Code to automatically detect etch pits from Keyence VK-X1000 images.
+Need to create named folders to make code work. All images need to be greyscale with no scale bars or borders.
+Also need associated height data (z data) in .csv file format
 
 started from: 
     https://github.com/rishim9816/Hole-detection-in-sarees-using-Image-Processing/blob/master/GaussImg.py
