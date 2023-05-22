@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue May 2 10:59:15 2023
+Code to mathematically fit functions to our theoretical model and compute chi-squared test statistic
 
-@author: emili
+@author: emilie
 """
 
 import matplotlib.pyplot as plt
@@ -41,7 +41,7 @@ pits = pd.DataFrame(length_csv)
 
 inplane = pd.DataFrame()
 
-# filter through aspect ratio
+# filter through aspect ratio (0.05)
 for i in range(len(pits.iloc[:,3])):
     if pits.iloc[i,3] < 0.05:
         inplane = inplane.append(pits.iloc[i,:])
@@ -59,7 +59,7 @@ for i in range(len(inplane)):
 inplane_filtered = []
 
 # remove neg vals and noise
-inplane_filtered = [ele for ele in inplane_filtered_max if ele > 10]
+inplane_filtered = [ele for ele in inplane_filtered_max if ele > 10] # rid of noise near zer0
 
 num_bins = 35
 
@@ -76,7 +76,6 @@ plt.ylabel('Frequency')
 
 # plt.ylim(0, 75)
 # plt.xlim(10,1000) # rid of noise near 0
-
 
 # variables to help convert mass - vol - area
 scanned_area = 14144.265 * 1e-8 #cm2
@@ -426,7 +425,7 @@ def plotSpectrum(mineral):
 Hal = Mineral("Halite")
 
 
-# range over 0-400 nm
+# range over 10-400 nm
 x_bins = np.linspace(10,400,num=len(inplane_filtered))
 x = x_bins
 
@@ -449,36 +448,11 @@ def theoretical_func(xdata, mineral, A, B, sigma, x0, c, d, beta):
     
     return total_func
 
-# define variables for integration
-## these will be a RANGE!!
-
-# need to create 5 for loops (one per variable)
-# also need to store the data - and make sure there is not a memory error
-# once data is stored THEN create the separate surface plots and such
-# put titles on each plot
-# for loop before integral - and everything should be included in the loop
-# ten values per varb to start
-# but need to know approx where to start the ranges.. mess around with varbs first to see
-
 # establish dataframe that will store all data
 chi_test_vals = pd.DataFrame(columns = ['Chi-Squared Test Statistic (overall)', 'A', 'B', 'x_0', 'sigma', 'c', 'd', 'beta'])
 
-## x = x_bins!! (0-400 nm)
 
-# =============================================================================
-
-# =============================================================================
-# A = 622000
-# sigma = 2.5
-# B = 2.55e6
-# x0 = 28
-# c = 0.055
-# d = 200
-# beta = 0.0449
-# =============================================================================
-
-
-# range over all variables 
+# range over all variables - USER CHANGE
 A_range = [618000, 619000, 620000, 621000, 622000, 623000, 624000] 
 sigma_range = [2.5] 
 B_range = [2.45e6, 2.5e6, 2.55e6, 2.6e6, 2.65e6, 2.7e6] 
@@ -552,24 +526,11 @@ for i in A_range:  #iterate over varbs
                             # append chi-square test statistic and variable combo to dataframe
                             chi_test_vals.loc[len(chi_test_vals.index)] = [chi_squared_sum, i, k, l, j, m, n, h] 
 
-                   
+# append chi-square to csv                   
 chi_test_vals.to_csv('Chi-Squared Test_Run 2_spy.csv', encoding='utf-8', index=False)                    
 
 
-
-
 print("run time: ", datetime.now() - startTime)
-
-
-
-
-
-
-
-
-
-
-
 
 
 
