@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-visualize function and compute chi-square for a single set of variables
+visualize function and compute chi-square for a single set of variables with error bars from poisson's distribution
 
 @author: emili
 """
