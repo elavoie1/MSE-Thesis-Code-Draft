@@ -33,7 +33,7 @@ startTime = datetime.now()
 
 
 # import all measured track lengths in halite 
-Height_File_Name = 'profile csv/detected pits - halite loc 2 150x 2.csv'
+Height_File_Name = 'profile csv/halite - all detected pits.csv'
 
 # open track length csv and convert to df
 length_csv = read_csv(Height_File_Name)
